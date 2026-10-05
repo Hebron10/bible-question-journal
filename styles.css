@@ -37,3 +37,8 @@
 .account-area span{font-size:10px;color:#74858d;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .account-area button{border:1px solid #d9e1e2;background:#fff;border-radius:7px;padding:7px 10px;font-size:9px;color:#5f737d;cursor:pointer}
 @media(max-width:760px){.account-area span{display:none}.account-area button{font-size:8px;padding:6px 8px}.auth-card{padding:30px 24px}}
+
+/* v20.10: mobile reading controls only */
+.mobile-reading-actions{display:none}
+@media(max-width:760px){.reader-rail{display:none}.mobile-reading-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}.mobile-reading-actions .outline{font-size:9px;padding:8px 7px;text-align:center}.mobile-reading-actions .danger-outline{color:var(--danger);border-color:#e4caca}}
+@media(max-width:430px){.mobile-reading-actions{grid-template-columns:1fr 1fr}}
