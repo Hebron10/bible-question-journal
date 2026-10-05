@@ -13,3 +13,6 @@ Deployment:
 4. Test Continue with Google.
 
 Do not open index.html using file:// for OAuth/PWA testing.
+
+
+Mobile bottom-navigation fix: added a real document-end spacer on mobile so the final content container can scroll completely above the fixed bottom navigation, including safe-area space. No other UI or functionality was changed.
