@@ -1,4 +1,4 @@
-const CACHE='bqj-app-v20-7';
+const CACHE='bqj-app-v20-8';
 const MIDVASH='bqj-midvash-v20-1';
 const URDU='bqj-urdu-v20-1';
 const ASSETS=['./','./index.html','./styles.css','./app.js','./manifest.json','./logo.svg','./icon-192.png','./icon-512.png','./icon-128.png','./icon-96.png','./icon-64.png','./icon-48.png','./icon-32.png','./icon-16.png'];
