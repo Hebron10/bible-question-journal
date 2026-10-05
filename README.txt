@@ -1,19 +1,15 @@
-Bible Question Journal — v20.3 PWA Installability Fix
+Bible Question Journal — v20.7 Auth Gate Visibility Fix
 
-This build keeps the v20.2 branding and functionality unchanged and strengthens the PWA installation metadata.
+Baseline: v20.4 Cloud + Google Auth, with the v20.6 OAuth callback handling.
 
-IMPORTANT: A PWA must be served from HTTPS (such as GitHub Pages). Opening index.html directly from a ZIP/file:// will NOT allow service workers or PWA installation.
+This build fixes the authentication screen remaining visible after successful Google sign-in. The CSS now explicitly hides the auth gate when JavaScript sets the HTML hidden property.
+
+The service-worker cache version is also updated to v20.7 so GitHub Pages does not keep serving the previous cached CSS.
 
 Deployment:
-1. Upload/extract the contents of this folder to the root of the GitHub Pages site (do not upload the ZIP as the site itself).
+1. Replace the contents of the GitHub Pages repository with this build.
 2. Open the HTTPS GitHub Pages URL.
-3. In Chrome/Edge, use the browser Install App button/menu when it appears.
+3. Hard refresh with Ctrl+Shift+R after deployment.
+4. Test Continue with Google.
 
-PWA metadata now explicitly declares:
-- id
-- start_url
-- scope
-- standalone display
-- display_override
-- 192x192 and 512x512 any + maskable icons
-- service-worker scope registration
+Do not open index.html using file:// for OAuth/PWA testing.
