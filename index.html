@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17324D"><meta name="description" content="Bible Question Journal PWA"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Question Journal">
+<link rel="manifest" href="./manifest.json"><link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="32x32" href="icon-32.png"><link rel="icon" type="image/png" sizes="16x16" href="icon-16.png"><link rel="apple-touch-icon" sizes="180x180" href="icon-192.png"><link rel="stylesheet" href="styles.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><title>Bible Question Journal</title>
+</head>
+<body>
+<div id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <img src="logo.svg" class="auth-logo" alt="Bible Question Journal">
+    <small>PRIVATE BIBLE JOURNAL</small>
+    <h1>Bible Question Journal</h1>
+    <p>Sign in to keep your questions, reading progress and research available across your devices.</p>
+    <button id="googleSignIn" class="google-signin" type="button"><span class="google-mark">G</span><span>Continue with Google</span></button>
+    <div id="authMessage" class="auth-message" aria-live="polite"></div>
+  </div>
+</div>
+<aside>
+  <div class="brand"><img class="brand-logo" src="logo.svg" alt="Bible Question Journal"><div><strong>Question</strong><small>Journal</small></div></div>
+  <nav aria-label="Primary navigation">
+    <button class="active" data-page="dashboard" title="Dashboard"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-5.5h5V20"/></svg></span><span>Dashboard</span></button>
+    <button data-page="bible" title="Bible Reader"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M5 4.5h10.5A3.5 3.5 0 0 1 19 8v11.5H8.5A3.5 3.5 0 0 0 5 23z"/><path d="M5 4.5A3.5 3.5 0 0 0 1.5 8v11.5H12"/><path d="M19 8H8.5A3.5 3.5 0 0 0 5 11.5"/></svg></span><span>Bible</span></button>
+    <button data-page="questions" title="Question Library"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v12A1.5 1.5 0 0 1 18 19.5H6A1.5 1.5 0 0 1 4.5 18V6A1.5 1.5 0 0 1 6 4.5Z"/><path d="M8 9h8M8 12h8M8 15h5"/></svg></span><span>Questions</span></button>
+    <button data-page="add" title="Add Question"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span>Add Question</span></button>
+    <button data-page="research" title="Research & Review"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 5 5M8 10.5h5"/></svg></span><span>Research</span></button>
+  </nav>
+  <div class="reading"><small>CURRENT READING</small><strong id="sideBook">Pydāish</strong><span id="sideChapter">Chapter 35 · In progress</span></div>
+</aside>
+<main>
+<header><div><small>QUESTION JOURNAL</small><h1 id="title">Dashboard</h1></div><div class="account-area"><span id="accountEmail"></span><button id="signOutButton" type="button">Sign out</button></div></header>
+
+<section id="dashboard" class="page active">
+  <div class="stats"><div><small>Total questions</small><b>0</b><span>Across all books</span></div><div><small>Unanswered</small><b>0</b><span>Needs investigation</span></div><div><small>Investigating</small><b>0</b><span>Research in progress</span></div><div><small>Answered</small><b>0</b><span>Current understanding</span></div></div>
+  <div class="dashboard-grid dashboard-top">
+    <div class="panel continue-panel"><div class="panel-head"><div><h3>Continue reading</h3><p>Pick up exactly where you left off.</p></div><button class="small-primary" id="continueReadingBtn">Continue reading</button></div><div class="continue-card"><div class="continue-icon">▣</div><div><small>LAST READING POSITION</small><b id="dashReading">Pydāish · Chapter 35</b><span id="dashReadingMeta">Resume at verse 17 · Urdu</span></div><strong id="dashReadingNumber">35 / 50</strong></div></div>
+    <div class="panel questions-by-book-panel"><div class="panel-head"><div><h3>Questions by book</h3><p>Where your questions are coming from</p></div></div><div id="questionsByBook" class="book-question-list"></div></div>
+  </div>
+  <div class="panel reading-progress-panel"><div class="panel-head"><div><h3>Reading progress</h3><p>66 books · reading status is separate from question status.</p></div><span class="progress-total" id="overallReadingProgress">0 / 66</span></div><div id="readingMap" class="reading-map"></div></div>
+</section>
+
+<section id="bible" class="page">
+<div class="reader-shell">
+  <div class="reader-bar"><div class="reader-location"><button class="reader-book-button" type="button"><span id="readerBookLabel">Pydāish</span><span class="chevron">⌄</span></button><span class="reader-divider">/</span><button class="chapter-jump" type="button">Chapter <span id="readerChapterLabel">35</span></button></div><div class="reader-bar-actions"><button class="icon-btn" title="Search" type="button"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 5 5"/></svg></button><button class="icon-btn" title="Reader settings" type="button"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 12h2M10 12h10M4 17h10M18 17h2"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="17" r="2"/></svg></button></div></div>
+  <div class="reader-selects"><label>Book<select id="readerBook"></select></label><label>Chapter<select id="readerChapter"></select></label><label>Language<select id="readerLanguage"><option value="ur">اردو</option><option value="en">English</option></select></label><label>Translation<select id="readerTranslation"></select></label></div>
+  <div class="reader-layout book-layout"><div class="book-page">
+    <div class="book-heading"><div class="book-kicker" id="readerBookKicker">PYDĀISH</div><h2 id="readerHeading">35</h2><div class="chapter-meta"><span>Chapter reading</span><span id="readerProgressText">Verse 17 of —</span></div></div>
+    <div class="book-progress-line"><div id="readerProgressBar"></div></div><article class="scripture" id="verseList"></article>
+    <div class="reader-next-wrap"><button type="button" class="reader-next-button" id="nextChapterButton"><span>Next</span><b id="nextChapterLabel">Chapter 36</b><span class="nav-arrow" dir="ltr">→</span></button></div>
+  </div>
+  <aside class="reader-rail">
+    <div class="rail-card"><small>BOOK PROGRESS</small><h3 id="bookProgressTitle">Pydāish</h3><div class="big-progress"><b id="bookProgressNumber">35 / 50</b><span>current chapter</span></div><div class="progress"><div id="bookProgressBar"></div></div><div class="reading-reset-actions"><button class="outline" id="resetCurrentReading" type="button">Reset this book</button><button class="outline danger-outline" id="resetAllReading" type="button">Reset all books</button></div></div>
+    <div class="rail-card study-tools"><small>STUDY</small><button class="outline full" id="studyAddQuestion" type="button"><span class="tool-symbol">＋</span>Add question</button></div>
+  </aside></div>
+</div></section>
+
+<section id="questions" class="page"><div class="filters"><input id="questionSearch" placeholder="Search question, reference, ID…"><select id="questionBookFilter"></select><select id="questionCategoryFilter"></select><select id="questionStatusFilter"></select></div><div id="activeFilters" class="active-filters"></div><div class="table panel"><table><thead><tr><th>ID</th><th>REFERENCE(S)</th><th>QUESTION</th><th>CATEGORY</th><th>STATUS</th></tr></thead><tbody></tbody></table></div></section>
+
+<section id="add" class="page"><div class="add-page-meta"><div class="pill">NEXT ID <b id="addNextId">PYD 001</b></div></div><div class="formcols"><div class="panel form">
+  <label>Primary book<select id="addBook"></select></label><label>Current chapter<select id="addChapter"></select></label><label>Primary reference<input id="addReference" placeholder="e.g. 1:26–31 or Genesis 1:26–2:5"><small>For a structured range, use the Bible button on the reader.</small></label><label>Additional references <small>optional · multiple allowed</small><input id="addAdditional" placeholder="e.g. 2:4–25; 5:1–2"></label><label>Your question<textarea id="addQuestionText" class="big" placeholder="Write the question exactly as you understand it…"></textarea></label><label>Why did I ask this? <small>optional</small><textarea id="addWhy" placeholder="What did you notice?"></textarea></label><label>Category<select id="addCategory"></select></label><label>Related question IDs<input id="addRelated" placeholder="e.g. PYD 004, PYD 017"></label>
+  <div class="actions"><button class="add-question-save" id="addSaveButton" type="button">Save</button></div>
+</div></div></section>
+
+<section id="research" class="page"><div id="researchPanel" class="panel"></div></section>
+</main>
+
+<dialog id="referenceDialog" class="app-dialog"><form method="dialog" id="referenceForm"><div class="dialog-head"><div><small>ADD QUESTION FROM READER</small><h2>Build reference</h2><p>Current reading position is prefilled. Ranges can stay within a book or cross books.</p></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div><div id="referenceSections"></div><div class="dialog-footer"><button value="cancel">Cancel</button><button class="primary" id="referenceSave" value="default">Add Question</button></div></form></dialog>
+
+<dialog id="editDialog" class="app-dialog wide-dialog"><form method="dialog" id="editForm"><div class="dialog-head"><div><small>QUESTION EDITOR</small><h2>Edit question</h2><p>Every saved field can be changed here.</p></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div><div id="editFields"></div><div class="dialog-footer"><button value="cancel">Cancel</button><button class="primary" id="editSave" value="default">Save changes</button></div></form></dialog>
+
+<dialog id="researchSearchDialog" class="research-browser-dialog"><div class="research-browser-head"><div><small>ONLINE RESEARCH</small><h2 id="researchSearchTitle">Search online</h2></div><div class="research-browser-actions"><button class="dialog-close" id="researchSearchMinimize" type="button" aria-label="Minimize online research" title="Minimize">−</button><button class="dialog-close" id="closeSearchDialog" type="button" aria-label="Close online research" title="Close">×</button></div></div><div id="researchSearchResults" class="search-results"><div class="search-empty">Search results will appear here.</div></div></dialog>
+<div id="researchBubble" class="research-bubble" hidden><button id="researchBubbleRestore" type="button" aria-label="Restore online research">⌕</button></div>
+<div id="toast"></div>
+<script src="app.js"></script>
+</body></html>
