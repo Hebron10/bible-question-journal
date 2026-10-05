@@ -17,3 +17,10 @@ PWA metadata now explicitly declares:
 - display_override
 - 192x192 and 512x512 any + maskable icons
 - service-worker scope registration
+
+
+v20.5 OAuth fix:
+- Google OAuth redirects to the production GitHub Pages URL.
+- OAuth authorization-code callbacks are explicitly exchanged for a Supabase session.
+- The callback URL is cleaned after successful sign-in.
+- v20.4 UI, cloud schema, Bible sources, and journal functionality are otherwise unchanged.

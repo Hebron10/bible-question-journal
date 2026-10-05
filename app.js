@@ -95,13 +95,51 @@ async function startAuthenticatedApp(session){
   try{await loadCloudState();}catch(err){console.error(err);cloudLoading=false;cloudReady=false;setAuthMessage('Could not load your cloud journal. Check your connection and try again.');setAuthVisible(true);return}
   initialize();appStarted=true;setAuthVisible(false);
 }
+const APP_URL='https://hebron10.github.io/bible-question-journal/';
+
+async function restoreOAuthSession(){
+  const url=new URL(window.location.href);
+  const code=url.searchParams.get('code');
+  if(!code)return null;
+  setAuthMessage('Finishing Google sign-in…');
+  const {data,error}=await supabaseClient.auth.exchangeCodeForSession(code);
+  if(error)throw error;
+  url.search='';
+  url.hash='';
+  window.history.replaceState({},document.title,APP_URL);
+  return data.session||null;
+}
+
 async function bootAuth(){
-  document.getElementById('googleSignIn').onclick=async()=>{setAuthMessage('Opening Google…');const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});if(error)setAuthMessage(error.message)};
+  document.getElementById('googleSignIn').onclick=async()=>{
+    setAuthMessage('Opening Google…');
+    const {error}=await supabaseClient.auth.signInWithOAuth({
+      provider:'google',
+      options:{redirectTo:APP_URL}
+    });
+    if(error)setAuthMessage(error.message);
+  };
   document.getElementById('signOutButton').onclick=async()=>{await supabaseClient.auth.signOut();window.location.reload()};
-  supabaseClient.auth.onAuthStateChange((event,session)=>{if(session)setTimeout(()=>startAuthenticatedApp(session),0);else{cloudUser=null;cloudReady=false;setAuthVisible(true);}});
-  const {data,error}=await supabaseClient.auth.getSession();
-  if(error){setAuthMessage(error.message);setAuthVisible(true);return}
-  if(data.session)await startAuthenticatedApp(data.session);else setAuthVisible(true);
+  supabaseClient.auth.onAuthStateChange((event,session)=>{
+    if(session)setTimeout(()=>startAuthenticatedApp(session),0);
+    else{cloudUser=null;cloudReady=false;setAuthVisible(true);}
+  });
+
+  try{
+    const callbackSession=await restoreOAuthSession();
+    if(callbackSession){
+      await startAuthenticatedApp(callbackSession);
+      return;
+    }
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error)throw error;
+    if(data.session)await startAuthenticatedApp(data.session);
+    else setAuthVisible(true);
+  }catch(error){
+    console.error('Authentication callback failed',error);
+    setAuthMessage(error?.message||'Could not complete Google sign-in.');
+    setAuthVisible(true);
+  }
 }
 function migrate(){
   state.reading=state.reading||{book:'Pydāish',chapter:1,verse:1,completed:{}};
